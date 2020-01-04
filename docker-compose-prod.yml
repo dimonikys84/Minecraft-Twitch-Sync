@@ -1,0 +1,61 @@
+version: '3.4'
+
+services:
+#  minecraft:
+#    image: itzg/minecraft-server
+#    ports:
+#      - 25565:25565
+#    volumes:
+#      - ./mc_server:/data
+#    environment:
+#      EULA: "TRUE"
+#      VERSION: "1.14.4"
+#      TYPE: "SPIGOT"
+#    restart: unless-stopped
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: mc-twitch-sync:latest
+    container_name: mc-twitch-sync
+    volumes:
+      - ./backend:/opt/app/backend
+      - ./dist:/opt/app/dist
+    command: /init
+    working_dir: /opt/app/backend
+    env_file:
+      - ./.env-prod
+    ports:
+      - 80:80
+    expose:
+      - 8000
+    depends_on:
+      - db
+    environment:
+      - LOG_LEVEL=DEBUG
+    restart: unless-stopped
+  db:
+    image: postgres
+    volumes:
+      - ./database:/var/lib/postgresql
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+#  nginx:
+#    image: nginx:1.15-alpine
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    volumes:
+#      - ./data/nginx:/etc/nginx/conf.d
+#      - ./data/certbot/conf:/etc/letsencrypt
+#      - ./data/certbot/www:/var/www/certbot
+#    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+#  certbot:
+#    image: certbot/certbot
+#    volumes:
+#      - ./data/certbot/conf:/etc/letsencrypt
+#    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"

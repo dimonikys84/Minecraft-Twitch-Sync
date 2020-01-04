@@ -1,0 +1,253 @@
+swagger: '2.0'
+info:
+  title: mc_twitch_sync
+  description: Minecraft and Twitch Sync Server
+  version: 1.0.0
+
+basePath: /api/v1
+
+schemes:
+  - https
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /healthcheck:
+    get:
+      operationId: mc_twitch_sync.views.healthcheck
+      summary: 'Проверка работы сервиса'
+      responses:
+        200:
+          description: 'Сервис работает в штатном режиме'
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        500:
+          description: 'Ошибка в работе сервиса'
+          schema:
+            $ref: '#/definitions/Error'
+  /callback:
+    get:
+      operationId: mc_twitch_sync.views.callback
+      summary: 'Коллбэк авторизации'
+      parameters:
+        - in: query
+          name: code
+          type: string
+          required: true
+      responses:
+        200:
+          description: 'Успешный ответ'
+  /login:
+    get:
+      operationId: mc_twitch_sync.views.login
+      summary: 'Авторизация'
+      responses:
+        200:
+          description: 'Успешный ответ'
+        500:
+          description: 'Ошибка сервера'
+  /logout:
+    get:
+      operationId: mc_twitch_sync.views.logout
+      summary: 'Деавторизация'
+      responses:
+        200:
+          description: 'Деавторизован успешно'
+        500:
+          description: 'Ошибка сервера'
+  /session_info:
+    get:
+      operationId: mc_twitch_sync.views.session_info
+      summary: 'Информация о сессии пользователя'
+      responses:
+        200:
+          description: 'Успешный ответ'
+          schema:
+            $ref: '#/definitions/SessionInfo'
+  /search/{nickname}:
+    get:
+      operationId: mc_twitch_sync.views.search
+      summary: 'Найти профиль minecraft'
+      parameters:
+        - in: path
+          name: nickname
+          type: string
+          required: true
+      responses:
+        200:
+          description: 'Успешный ответ'
+  /link:
+    post:
+      operationId: mc_twitch_sync.views.link
+      summary: 'Привязать текущего пользователя к uuid minecraft'
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/LinkBody'
+      responses:
+        200:
+          description: 'Пользователь успешно приаязан'
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+  /is_allowed:
+    get:
+      operationId: mc_twitch_sync.views.is_allowed
+      summary: 'Проверить, есть ли доступ к серверу у конкретного пользователя'
+      parameters:
+        - in: query
+          name: username
+          type: string
+          required: true
+        - in: query
+          name: uuid
+          type: string
+          required: true
+        - in: query
+          name: token
+          type: string
+          required: true
+      responses:
+        200:
+          description: 'Успешный ответ'
+          schema:
+            $ref: '#/definitions/IsAllowedResponse'
+  /mc_add/{token}:
+    post:
+      summary: 'Добавить пользователя на сервер и продли посещение на 7 дней'
+      operationId: mc_twitch_sync.views.mc_add
+      parameters:
+        - in: path
+          name: token
+          type: string
+          required: true
+        - in: query
+          name: username
+          type: string
+          required: true
+      responses:
+        200:
+          description: 'Пользователь успешно добавлен'
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+  /mc_extend/{token}:
+    post:
+      summary: 'Продлить посещение на сервере на 7 дней'
+      operationId: mc_twitch_sync.views.mc_extend
+      parameters:
+        - in: path
+          name: token
+          type: string
+          required: true
+        - in: query
+          name: username
+          type: string
+          required: true
+      responses:
+        200:
+          description: 'Посещение продлено'
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+  /mc_ban/{token}:
+    post:
+      summary: 'Забанить пользователя на сервисе'
+      operationId: mc_twitch_sync.views.mc_ban
+      parameters:
+        - in: path
+          name: token
+          type: string
+          required: true
+        - in: query
+          name: username
+          type: string
+          required: true
+      responses:
+        200:
+          description: 'Пользователь забанен'
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+  /mc_unban/{token}:
+    post:
+      summary: 'Разабанить пользователя на сервисе'
+      operationId: mc_twitch_sync.views.mc_unban
+      parameters:
+        - in: path
+          name: token
+          type: string
+          required: true
+        - in: query
+          name: username
+          type: string
+          required: true
+      responses:
+        200:
+          description: 'Пользователь раззабанен'
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+
+definitions:
+  Error:
+    type: object
+    properties:
+      error:
+        type: string
+  SuccessResponse:
+    type: object
+    properties:
+      result:
+        type: string
+        default: success
+  SessionInfo:
+    type: object
+    properties:
+      uuid:
+        type: string
+      username:
+        type: string
+      expire_date:
+        type: number
+  SearchResult:
+    type: array
+    items:
+      type: object
+      properties:
+        uuid:
+          type: string
+        nickname:
+          type: string
+  TwitchUsers:
+    type: array
+    items:
+      type: object
+      properties:
+        nickname:
+          type: string
+        expire_date:
+          type: number
+        is_sub:
+          type: boolean
+  AddMcPlayer:
+    type: object
+    properties:
+      uuid:
+        type: string
+      nickname:
+        type: string
+  IsAllowedResponse:
+    type: object
+    properties:
+      is_allowed:
+        type: boolean
+      message:
+        type: string
+  LinkBody:
+    type: object
+    properties:
+      uuid:
+        type: string
+      nickname:
+        type: string

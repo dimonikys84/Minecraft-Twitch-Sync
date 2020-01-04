@@ -1,0 +1,4 @@
+name: Twitch_mc_sync
+version: ${project.version}
+main: com.dmitrygulak.twitch_mc_sync.twitch_mc_sync.Twitch_mc_sync
+api-version: 1.13

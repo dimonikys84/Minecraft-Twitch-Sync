@@ -1,0 +1,7 @@
+DOCKER_COMPOSE_FILE=docker-compose-prod.yml
+PRODUCTION_ENV_FILE=.env-prod
+HOST_NAME=minecraft
+HOST_ADDR=111.111.111.11
+HOST_PROJECT_DIR=/opt/<server project path>
+PLUGIN_PATH=/server_plugin/target/twitch_mc_sync-1.0.jar
+MINECRAFT_SERVER_PLUGIN_PATH=/opt/<minecraft server path>/plugins

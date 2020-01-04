@@ -1,0 +1,9 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+LANG=en_US.utf8
+MUSL_LOCPATH=en_US.utf8
+TZ=${TZ:-UTC}
+
+apk add --update --no-cache --quiet --no-progress tzdata
+cp /usr/share/zoneinfo/${TZ} /etc/localtime

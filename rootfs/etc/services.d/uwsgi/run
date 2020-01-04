@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+exec uwsgi --die-on-term /etc/uwsgi/app.ini 
+

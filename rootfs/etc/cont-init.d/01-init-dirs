@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+# Nginx directories
+if [ ! -d /run/nginx ]; then
+	mkdir -p /run/nginx
+fi
+
+if [ ! -d /var/lib/nginx ]; then
+	mkdir -p /var/lib/nginx/tmp
+fi
+
+if [ ! -d /alloc/logs ]; then
+    mkdir -p /alloc/logs
+fi

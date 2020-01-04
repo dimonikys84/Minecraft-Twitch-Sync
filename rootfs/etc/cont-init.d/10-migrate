@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+cd /opt/app/backend
+python3 cli.py upgrade

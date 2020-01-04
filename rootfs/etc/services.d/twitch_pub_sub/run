@@ -1,0 +1,4 @@
+#!/usr/bin/with-contenv sh
+set -e
+
+cd /opt/app/backend && exec python cli.py twitch_pub_sub
