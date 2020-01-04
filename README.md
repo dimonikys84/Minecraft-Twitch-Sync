@@ -1,5 +1,5 @@
 # MC Twitch Sync
-MC Twitch Sync - A service that allow to integrate twitch channel activities with the Minecraft server. For example: giving access to the Minecraft server for channel rewards or subscribing. This repository is some kind of example of how you can integrate activities of your twitch channel with the Minecraft server.
+MC Twitch Sync - A service that can integrate twitch channel activities with the Minecraft server. For example: give access to the Minecraft server if the user got channel reward or subscribed to channel. This repository is some kind of example of how you can integrate activities of your twitch channel with the Minecraft server.
 
 ## Structure:
 backend - Flask server + PubSub listener
